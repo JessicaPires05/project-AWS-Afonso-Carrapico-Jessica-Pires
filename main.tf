@@ -12,16 +12,12 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
+module "vpc" {
+  source = "./modules/vpc"
 
-  tags = {
-    Name        = "project-aws-dev-vpc"
-    Project     = "project-aws"
-    Environment = "dev"
-    Owner       = "afonso-jessica"
-    ManagedBy   = "terraform"
-  }
+  vpc_cidr            = "10.0.0.0/16"
+  public_subnet_cidr  = "10.0.1.0/24"
+  private_subnet_cidr = "10.0.2.0/24"
 }
 
 data "aws_ami" "amazon_linux" {
@@ -40,6 +36,8 @@ resource "aws_instance" "server" {
   instance_type = "t3.micro"
   key_name      = "project-aws-key"
 
+  subnet_id = module.vpc.public_subnet_id
+
   vpc_security_group_ids = [
     aws_security_group.ssh.id
   ]
@@ -52,9 +50,9 @@ resource "aws_instance" "server" {
     ManagedBy   = "terraform"
   }
 }
-
 resource "aws_security_group" "ssh" {
   name = "project-aws-dev-ssh"
+  vpc_id = module.vpc.vpc_id
 
   ingress {
     from_port   = 22

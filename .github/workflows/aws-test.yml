@@ -1,5 +1,5 @@
 name: AWS Test
-
+#Dá uma autorização temporaria ao repositório para que possa funcionar sem Access Keys
 on:
   workflow_dispatch:
 
