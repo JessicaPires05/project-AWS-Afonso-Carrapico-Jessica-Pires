@@ -8,10 +8,6 @@ terraform {
   }
 }
 
-provider "aws" {
-  region = "us-east-1"
-}
-
 module "vpc" {
   source = "./modules/vpc"
 
@@ -48,3 +44,17 @@ module "security_group" {
   security_group_name = "project-aws-dev-ssh"
 }
 
+module "rds" {
+  source = "./modules/rds"
+
+  db_identifier = "project-aws-db"
+  db_name       = "projectdb"
+  db_username   = "postgres"
+  db_password   = var.db_password
+}
+
+module "sqs" {
+  source = "./modules/sqs"
+
+  queue_name = "project-aws-queue"
+}
