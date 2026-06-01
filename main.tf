@@ -31,40 +31,20 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
-resource "aws_instance" "server" {
-  ami           = data.aws_ami.amazon_linux.id
-  instance_type = "t3.micro"
-  key_name      = "project-aws-key"
+module "ec2" {
+  source = "./modules/ec2"
 
-  subnet_id = module.vpc.public_subnet_id
-
-  vpc_security_group_ids = [
-    aws_security_group.ssh.id
-  ]
-
-  tags = {
-    Name        = "project-aws-dev-ec2"
-    Project     = "project-aws"
-    Environment = "dev"
-    Owner       = "afonso-jessica"
-    ManagedBy   = "terraform"
-  }
+  ami_id            = data.aws_ami.amazon_linux.id
+  instance_type     = "t3.micro"
+  key_name          = "project-aws-key"
+  subnet_id         = module.vpc.public_subnet_id
+  security_group_id = module.security_group.security_group_id
 }
-resource "aws_security_group" "ssh" {
-  name = "project-aws-dev-ssh"
-  vpc_id = module.vpc.vpc_id
 
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+module "security_group" {
+  source = "./modules/security-group"
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  vpc_id              = module.vpc.vpc_id
+  security_group_name = "project-aws-dev-ssh"
 }
+
