@@ -1,0 +1,30 @@
+name: Deploy to EC2
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+
+          script: |
+            docker stop project-aws || true
+            docker rm project-aws || true
+
+            docker pull ghcr.io/jessicapires05/project-aws:latest
+
+            docker run -d \
+              --name project-aws \
+              -p 80:80 \
+              ghcr.io/jessicapires05/project-aws:latest
