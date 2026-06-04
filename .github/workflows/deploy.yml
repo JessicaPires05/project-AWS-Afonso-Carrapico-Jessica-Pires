@@ -26,5 +26,5 @@ jobs:
 
             docker run -d \
               --name project-aws \
-              -p 80:80 \
+              -p 80:3000 \
               ghcr.io/jessicapires05/project-aws:latest
