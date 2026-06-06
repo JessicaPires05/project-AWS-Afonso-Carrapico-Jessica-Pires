@@ -11,9 +11,13 @@ terraform {
 module "vpc" {
   source = "./modules/vpc"
 
-  vpc_cidr            = "10.0.0.0/16"
-  public_subnet_cidr  = "10.0.1.0/24"
-  private_subnet_cidr = "10.0.2.0/24"
+  vpc_cidr = "10.0.0.0/16"
+
+  public_subnet_1_cidr = "10.0.1.0/24"
+  public_subnet_2_cidr = "10.0.2.0/24"
+
+  private_subnet_1_cidr = "10.0.3.0/24"
+  private_subnet_2_cidr = "10.0.4.0/24"
 }
 
 data "aws_ami" "amazon_linux" {
@@ -51,6 +55,11 @@ module "rds" {
   db_name       = "projectdb"
   db_username   = "postgres"
   db_password   = var.db_password
+
+  private_subnet_1_id = module.vpc.private_subnet_1_id
+  private_subnet_2_id = module.vpc.private_subnet_2_id
+
+  security_group_id = module.security_group.security_group_id
 }
 
 module "sqs" {

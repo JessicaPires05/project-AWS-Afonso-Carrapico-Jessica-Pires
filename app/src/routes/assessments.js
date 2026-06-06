@@ -1,17 +1,22 @@
 const express = require("express");
+const pool = require("../database");
 
 const router = express.Router();
 
-const assessments = [];
+router.get("/", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM assessments ORDER BY id"
+    );
 
-router.get("/", (req, res) => {
-  res.json(assessments);
-});
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
 
-router.post("/", (req, res) => {
-  assessments.push(req.body);
-
-  res.status(201).json(req.body);
+    res.status(500).json({
+      error: "Database error"
+    });
+  }
 });
 
 module.exports = router;

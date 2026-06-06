@@ -1,20 +1,22 @@
 const express = require("express");
+const pool = require("../database");
 
 const router = express.Router();
 
-const practices = [
-  {
-    id: 1,
-    name: "Project Management"
-  },
-  {
-    id: 2,
-    name: "Quality Assurance"
-  }
-];
+router.get("/", async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT * FROM practices ORDER BY id"
+    );
 
-router.get("/", (req, res) => {
-  res.json(practices);
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Database error"
+    });
+  }
 });
 
 module.exports = router;

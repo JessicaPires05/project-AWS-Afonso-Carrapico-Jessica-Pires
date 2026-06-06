@@ -1,3 +1,16 @@
+resource "aws_db_subnet_group" "main" {
+  name = "project-aws-db-subnet-group"
+
+  subnet_ids = [
+    var.private_subnet_1_id,
+    var.private_subnet_2_id
+  ]
+
+  tags = {
+    Name = "project-aws-db-subnet-group"
+  }
+}
+
 resource "aws_db_instance" "postgres" {
   identifier = var.db_identifier
 
@@ -15,6 +28,12 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible = false
 
   skip_final_snapshot = true
+
+  db_subnet_group_name = aws_db_subnet_group.main.name
+
+  vpc_security_group_ids = [
+    var.security_group_id
+  ]
 
   tags = {
     Name        = var.db_identifier
