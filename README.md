@@ -265,13 +265,13 @@ Foram implementadas as seguintes medidas de segurança:
 
 ---
 
-## Autores
-
-- Afonso Carrapico
-- Jéssica Pires
-
----
-
 ## Objetivo
 
 O objetivo deste projeto foi demonstrar a implementação de uma infraestrutura cloud recorrendo a Infrastructure as Code, contentorização e automação de deployment, utilizando serviços geridos da AWS e boas práticas de DevOps.
+
+---
+
+## Autores
+
+- Afonso Carrapico, a22301916
+- Jéssica Pires, a22303954
