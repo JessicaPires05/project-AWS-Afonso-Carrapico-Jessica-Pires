@@ -1,0 +1,26 @@
+@startuml
+
+title Project AWS Architecture
+
+actor User
+
+node "EC2" {
+    component "Node.js API"
+}
+
+database "RDS PostgreSQL" as RDS
+
+queue "Amazon SQS" as SQS
+
+cloud "GitHub Actions" as GHA
+
+cloud "GHCR" as GHCR
+
+User --> "Node.js API"
+"Node.js API" --> RDS
+"Node.js API" --> SQS
+
+GHA --> GHCR
+GHCR --> "Node.js API"
+
+@enduml
